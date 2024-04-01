@@ -1,5 +1,9 @@
 package contactsManagement;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 public class User {
 	
 	static int id = 0;
@@ -12,6 +16,22 @@ public class User {
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		
+		DB db = DB.getDB();
+	    Connection dbConnection = db.getConnection();
+	    String query = "INSERT INTO Users (user_name, user_email, user_password) VALUES (?, ?, ?)";
+	    PreparedStatement preparedStatement;
+		try {
+			preparedStatement = dbConnection.prepareStatement(query);
+			preparedStatement.setString(1, name);
+		    preparedStatement.setString(2, email);
+		    preparedStatement.setString(3, password);
+		    preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
 	}
 	
 	public static int getId() {

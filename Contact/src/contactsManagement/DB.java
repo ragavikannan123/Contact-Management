@@ -33,21 +33,34 @@ public class DB {
     public Connection getConnection() {
         return connection;
     }
-    boolean checkUser(String name,String password) throws SQLException {
-		 String query = "SELECT * FROM Users WHERE user_name = ? AND user_password = ?";
-	       PreparedStatement preparedStatement = connection.prepareStatement(query);
-	        preparedStatement.setString(1, name);
-	        preparedStatement.setString(2, password);
-	        
-	        ResultSet resultSet = preparedStatement.executeQuery();
-	        return resultSet.next();
+    boolean checkUser(String email,String password){
+		 String query = "SELECT * FROM Users WHERE user_email = ? AND user_password = ?";
+	       ResultSet resultSet = null;
+	        try {
+				PreparedStatement preparedStatement = connection.prepareStatement(query);
+		        preparedStatement.setString(1, email);
+		        preparedStatement.setString(2, password);
+		        resultSet = preparedStatement.executeQuery();
+		        return resultSet.next();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        return false;
     }
-    int getId(String name, String password) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT user_id FROM Users WHERE user_name = ? AND user_password = ?");
-        preparedStatement.setString(1, name);
-        preparedStatement.setString(2, password);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        return resultSet.getInt("user_id");
+    int getId(String email, String password){
+        PreparedStatement preparedStatement;
+		try {
+			preparedStatement = connection.prepareStatement("SELECT user_id FROM Users WHERE user_email = ? AND user_password = ?");
+			 preparedStatement.setString(1, email);
+		        preparedStatement.setString(2, password);
+		        ResultSet resultSet = preparedStatement.executeQuery();
+		        return resultSet.getInt("user_id");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       return 0;
     }
 
 }
